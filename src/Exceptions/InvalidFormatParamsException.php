@@ -6,9 +6,7 @@ namespace Mateodioev\MultiLang\Exceptions;
 
 use InvalidArgumentException;
 
-use function join;
-
-class InvalidFormatParams extends InvalidArgumentException implements MultiLangExceptionInterface
+class InvalidFormatParamsException extends InvalidArgumentException implements MultiLangExceptionInterface
 {
     /**
      * @param string[] $params
