@@ -4,6 +4,8 @@ declare (strict_types = 1);
 
 namespace Mateodioev\MultiLang;
 
+use Mateodioev\MultiLang\Exceptions\EmptyDirectoryException;
+use Mateodioev\MultiLang\Exceptions\InvalidDirectoryException;
 use Mateodioev\MultiLang\Parser\FileParser;
 
 /**
@@ -23,7 +25,7 @@ class Parser
     public function __construct(private string $directory)
     {
         if (\is_dir($this->directory) === false) {
-            throw new \InvalidArgumentException("Directory \"$directory\" doesn't exists");
+            throw InvalidDirectoryException::at($directory);
         }
 
         $this->files = \glob($this->directory . "/*.json");
@@ -37,7 +39,7 @@ class Parser
     private function validateDirectory(): void
     {
         if (empty($this->files)) {
-            throw new \InvalidArgumentException("Empty directory");
+            throw new EmptyDirectoryException();
         }
     }
 

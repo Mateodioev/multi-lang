@@ -4,6 +4,9 @@ declare (strict_types = 1);
 
 namespace Mateodioev\MultiLang;
 
+use Mateodioev\MultiLang\Exceptions\LanguageDataMismatchException;
+use Mateodioev\MultiLang\Exceptions\LanguageTokenMismatchException;
+
 class Language
 {
     /**
@@ -52,17 +55,14 @@ class Language
     {
         foreach ($other->data as $key => $value) {
             if (\array_key_exists($key, $this->data) === false) {
-                throw new \RuntimeException("Language {$this->shortName} doesn't contain key $key");
+                throw LanguageDataMismatchException::at($this->shortName, $key);
             }
 
             // Don't compare rawData because it's supposed to be in another language
             $actualTokens = $this->data($key)?->tokens() ?? [];
             $diff = \array_diff($value->tokens(), $actualTokens);
             if (\count($diff) !== 0) {
-                $exceptionMessage = $this->englishName . ' contain different data than ' . $other->englishName
-                . ' in key "' . $key . '" with values [' . \implode(', ', $diff) . '] in '
-                . $this->englishName . ' and [' . \implode(', ', $actualTokens) . '] in ' . $other->englishName;
-                throw new \RuntimeException($exceptionMessage);
+                throw LanguageTokenMismatchException::at($this->englishName, $other->englishName, $key, $diff, $actualTokens);
             }
         }
     }

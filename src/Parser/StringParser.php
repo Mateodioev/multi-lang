@@ -4,6 +4,8 @@ declare (strict_types = 1);
 
 namespace Mateodioev\MultiLang\Parser;
 
+use Mateodioev\MultiLang\Exceptions\InvalidFormatParams;
+
 class StringParser
 {
     private ?array $tokens = null;
@@ -36,7 +38,7 @@ class StringParser
     {
         $diff = \array_diff(\array_keys($params), $this->tokens());
         if (\count($diff) > 0) {
-            throw new \InvalidArgumentException('The following parameters are not in the tokens: ' . \implode(', ', $diff));
+            throw InvalidFormatParams::for($diff);
         }
     }
 

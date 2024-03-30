@@ -5,6 +5,7 @@ declare (strict_types = 1);
 namespace Mateodioev\MultiLang\Parser;
 
 use Mateodioev\MultiLang\DataAccessor;
+use Mateodioev\MultiLang\Exceptions\FileException;
 use Mateodioev\MultiLang\Language;
 
 class FileParser
@@ -52,7 +53,7 @@ class FileParser
     private function validateFile(mixed $content): void
     {
         if (empty($content)) {
-            throw new \InvalidArgumentException('Empty json "' . \basename($this->file) . '" file');
+            throw FileException::empty($this->file);
         }
     }
 
@@ -65,8 +66,7 @@ class FileParser
         $difference = \array_diff($keys, self::REQUIRED_PARAMETERS);
 
         if (empty($difference) === false) {
-            $unknownKeys = \join(',', $difference);
-            throw new \InvalidArgumentException('Unknown keys ' . $unknownKeys . ' in lang ' . $this->name);
+            throw FileException::invalid($this->file, $difference);
         }
     }
 

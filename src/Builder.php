@@ -4,6 +4,7 @@ declare (strict_types = 1);
 
 namespace Mateodioev\MultiLang;
 
+use Mateodioev\MultiLang\Exceptions\RequiredParamException;
 use Mateodioev\MultiLang\Parser\FileParser;
 
 /**
@@ -44,6 +45,9 @@ class Builder
         return $this;
     }
 
+    /**
+     * @throws RequiredParamException If a required param is missing
+     */
     public function build(): Language
     {
         $this->checkParams();
@@ -63,19 +67,19 @@ class Builder
     private function checkParams(): void
     {
         if (empty($this->englishName)) {
-            throw new \InvalidArgumentException('The english name is required');
+            throw RequiredParamException::for('englishName');
         }
 
         if (empty($this->name)) {
-            throw new \InvalidArgumentException('The name is required');
+            throw RequiredParamException::for('name');
         }
 
         if (empty($this->shortName)) {
-            throw new \InvalidArgumentException('The short name is required');
+            throw RequiredParamException::for('shortName');
         }
 
         if (empty($this->data)) {
-            throw new \InvalidArgumentException('The data is required');
+            throw RequiredParamException::for('data');
         }
     }
 }
