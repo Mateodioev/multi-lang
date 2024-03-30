@@ -5,8 +5,9 @@ declare (strict_types=1);
 namespace Mateodioev\MultiLang;
 
 use Mateodioev\MultiLang\Cache\{Cache, NullCache};
-
 use RuntimeException;
+
+use function array_map;
 
 final class Lang
 {
@@ -35,6 +36,24 @@ final class Lang
         }
 
         return $language;
+    }
+
+    /**
+     * Get all languages
+     *
+     * @return array<string,Language>
+     */
+    public static function all(): array
+    {
+        static::checkParser();
+
+        $langs = array_map(function ($_lang) {
+            $lang = $_lang->getLanguage();
+            self::$cache->set($lang->shortName, $lang);
+            return $lang;
+        }, self::$parser->langs());
+
+        return $langs;
     }
 
     /**
