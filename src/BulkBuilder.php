@@ -4,8 +4,6 @@ declare (strict_types=1);
 
 namespace Mateodioev\MultiLang;
 
-use function array_map;
-
 class BulkBuilder
 {
     /**
@@ -30,7 +28,7 @@ class BulkBuilder
     public function save(string $directory): void
     {
         foreach ($this->builders as $builder) {
-            $builder->save($directory . '/' . $builder->name . '.json');
+            $builder->save($directory . '/' . $builder->shortName . '.json');
         }
     }
 }
