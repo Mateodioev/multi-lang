@@ -62,7 +62,7 @@ final class Lang
         }
     }
 
-    public static function checkParser(): void
+    private static function checkParser(): void
     {
         if (self::$parser === null) {
             throw new \RuntimeException('You must call Lang::setup() before');
