@@ -33,12 +33,15 @@ class Language
 
     public function toJson(): string
     {
-        return \json_encode([
-            'englishName' => $this->englishName,
-            'name' => $this->name,
-            'shortName' => $this->shortName,
-            'data' => \array_map(fn(DataAccessor $data) => $data->rawData, $this->data),
-        ]);
+        return \json_encode(
+            value: [
+                'englishName' => $this->englishName,
+                'name' => $this->name,
+                'shortName' => $this->shortName,
+                'data' => \array_map(fn(DataAccessor $data) => $data->rawData, $this->data),
+            ],
+            flags: \JSON_THROW_ON_ERROR  | \JSON_UNESCAPED_UNICODE  | \JSON_PRETTY_PRINT,
+        );
     }
 
     /**
