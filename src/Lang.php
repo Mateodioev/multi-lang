@@ -20,9 +20,8 @@ final class Lang
 
     public static function get(string $shortName): ?Language
     {
-        if (self::$parser === null) {
-            throw new \RuntimeException('You must call Lang::setup() before');
-        }
+        static::checkParser();
+
         if (self::$cache->has($shortName)) {
             return self::$cache->get($shortName);
         }
@@ -35,5 +34,38 @@ final class Lang
         }
 
         return $language;
+    }
+
+    /**
+     * Check if all languages contain the same data and same tokens
+     */
+    public static function compareData(): void
+    {
+        static::checkParser();
+
+        $langs = [];
+        foreach (self::$parser->langs() as $_lang) {
+            $lang = $_lang->getLanguage();
+            self::$cache->set($lang->shortName, $lang);
+            $langs[] = $lang;
+        }
+
+        // Check if all languages contain the same data
+        $count = count($langs);
+        for ($i = 0; $i < $count; $i++) {
+            for ($j = $i + 1; $j < $count; $j++) {
+                $actual = $langs[$i];
+                $other = $langs[$j];
+
+                $actual->compareData($other);
+            }
+        }
+    }
+
+    public static function checkParser(): void
+    {
+        if (self::$parser === null) {
+            throw new \RuntimeException('You must call Lang::setup() before');
+        }
     }
 }

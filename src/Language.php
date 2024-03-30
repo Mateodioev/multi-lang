@@ -45,22 +45,25 @@ class Language
     }
 
     /**
-     * Return true if both languages contain the same data
+     * @throws \RuntimeException If the data is different
+     * @throws \RuntimeException If tokens are different
      */
-    public function compareData(Language $other): bool
+    public function compareData(Language $other): void
     {
         foreach ($other->data as $key => $value) {
             if (\array_key_exists($key, $this->data) === false) {
-                return false;
+                throw new \RuntimeException("Language {$this->shortName} doesn't contain key $key");
             }
 
             // Don't compare rawData because it's supposed to be in another language
-            $diff = \array_diff($value->tokens(), $this->data($key)?->tokens() ?? []);
+            $actualTokens = $this->data($key)?->tokens() ?? [];
+            $diff = \array_diff($value->tokens(), $actualTokens);
             if (\count($diff) !== 0) {
-                return false;
+                $exceptionMessage = $this->englishName . ' contain different data than ' . $other->englishName
+                . ' in key "' . $key . '" with values [' . \implode(', ', $diff) . '] in '
+                . $this->englishName . ' and [' . \implode(', ', $actualTokens) . '] in ' . $other->englishName;
+                throw new \RuntimeException($exceptionMessage);
             }
         }
-
-        return true;
     }
 }
