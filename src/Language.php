@@ -5,14 +5,10 @@ declare (strict_types=1);
 namespace Mateodioev\MultiLang;
 
 use Mateodioev\MultiLang\Exceptions\{LanguageDataMismatchException, LanguageTokenMismatchException};
+use Mateodioev\MultiLang\Parser\FileParser;
 use RuntimeException;
 
 use function array_diff;
-use function array_key_exists;
-use function array_map;
-use function count;
-
-use function json_encode;
 
 class Language
 {
@@ -45,10 +41,9 @@ class Language
     {
         return json_encode(
             value: [
-                'englishName' => $this->englishName,
-                'name' => $this->name,
-                'shortName' => $this->shortName,
-                'data' => array_map(fn (DataAccessor $data) => $data->rawData, $this->data),
+                FileParser::ENGLISH_NAME => $this->englishName,
+                FileParser::NAME => $this->name,
+                FileParser::DATA => array_map(fn (DataAccessor $data) => $data->rawData, $this->data),
             ],
             flags: \JSON_THROW_ON_ERROR  | \JSON_UNESCAPED_UNICODE  | \JSON_PRETTY_PRINT,
         );
