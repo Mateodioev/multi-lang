@@ -1,11 +1,11 @@
 <?php
 
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace Mateodioev\MultiLang\Exceptions;
 
-interface MultiLangExceptionInterface extends \Throwable
+use Throwable;
 
+interface MultiLangExceptionInterface extends Throwable
 {
-
 }

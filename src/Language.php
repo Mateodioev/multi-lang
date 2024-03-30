@@ -1,11 +1,18 @@
 <?php
 
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace Mateodioev\MultiLang;
 
-use Mateodioev\MultiLang\Exceptions\LanguageDataMismatchException;
-use Mateodioev\MultiLang\Exceptions\LanguageTokenMismatchException;
+use Mateodioev\MultiLang\Exceptions\{LanguageDataMismatchException, LanguageTokenMismatchException};
+use RuntimeException;
+
+use function array_diff;
+use function array_key_exists;
+use function array_map;
+use function count;
+
+use function json_encode;
 
 class Language
 {
@@ -36,32 +43,32 @@ class Language
 
     public function toJson(): string
     {
-        return \json_encode(
+        return json_encode(
             value: [
                 'englishName' => $this->englishName,
                 'name' => $this->name,
                 'shortName' => $this->shortName,
-                'data' => \array_map(fn(DataAccessor $data) => $data->rawData, $this->data),
+                'data' => array_map(fn (DataAccessor $data) => $data->rawData, $this->data),
             ],
             flags: \JSON_THROW_ON_ERROR  | \JSON_UNESCAPED_UNICODE  | \JSON_PRETTY_PRINT,
         );
     }
 
     /**
-     * @throws \RuntimeException If the data is different
-     * @throws \RuntimeException If tokens are different
+     * @throws RuntimeException If the data is different
+     * @throws RuntimeException If tokens are different
      */
     public function compareData(Language $other): void
     {
         foreach ($other->data as $key => $value) {
-            if (\array_key_exists($key, $this->data) === false) {
+            if (array_key_exists($key, $this->data) === false) {
                 throw LanguageDataMismatchException::at($this->shortName, $key);
             }
 
             // Don't compare rawData because it's supposed to be in another language
             $actualTokens = $this->data($key)?->tokens() ?? [];
-            $diff = \array_diff($value->tokens(), $actualTokens);
-            if (\count($diff) !== 0) {
+            $diff = array_diff($value->tokens(), $actualTokens);
+            if (count($diff) !== 0) {
                 throw LanguageTokenMismatchException::at($this->englishName, $other->englishName, $key, $diff, $actualTokens);
             }
         }

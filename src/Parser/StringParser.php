@@ -1,10 +1,16 @@
 <?php
 
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace Mateodioev\MultiLang\Parser;
 
 use Mateodioev\MultiLang\Exceptions\InvalidFormatParams;
+
+use function array_diff;
+use function array_keys;
+use function count;
+use function preg_match_all;
+use function preg_replace_callback;
 
 class StringParser
 {
@@ -25,7 +31,7 @@ class StringParser
     {
         $this->checkParams($params);
 
-        return \preg_replace_callback('/\{(\w+)\}/', function ($matches) use ($params) {
+        return preg_replace_callback('/\{(\w+)\}/', function ($matches) use ($params) {
             $key = $matches[1];
             return isset($params[$key]) ? $params[$key] : $matches[0];
         }, $this->rawData);
@@ -36,8 +42,8 @@ class StringParser
      */
     private function checkParams(array $params): void
     {
-        $diff = \array_diff(\array_keys($params), $this->tokens());
-        if (\count($diff) > 0) {
+        $diff = array_diff(array_keys($params), $this->tokens());
+        if (count($diff) > 0) {
             throw InvalidFormatParams::for($diff);
         }
     }
@@ -60,7 +66,7 @@ class StringParser
         }
 
         $this->tokens = [];
-        \preg_match_all('/\{([a-zA-Z0-9_]+)\}/', $this->rawData, $matches);
+        preg_match_all('/\{([a-zA-Z0-9_]+)\}/', $this->rawData, $matches);
         $this->tokens = $matches[1];
 
         return $this->tokens;

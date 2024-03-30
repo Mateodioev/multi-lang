@@ -1,10 +1,12 @@
 <?php
 
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace Mateodioev\MultiLang\Exceptions;
 
-class LanguageDataMismatchException extends \RuntimeException implements MultiLangExceptionInterface
+use RuntimeException;
+
+class LanguageDataMismatchException extends RuntimeException implements MultiLangExceptionInterface
 {
     public static function at(string $shortName, string $key): self
     {

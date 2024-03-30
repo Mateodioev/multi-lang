@@ -1,10 +1,14 @@
 <?php
 
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace Mateodioev\MultiLang\Exceptions;
 
-class FileException extends \InvalidArgumentException implements MultiLangExceptionInterface
+use InvalidArgumentException;
+
+use function join;
+
+class FileException extends InvalidArgumentException implements MultiLangExceptionInterface
 {
     public static function empty(string $file): static
     {
@@ -13,7 +17,7 @@ class FileException extends \InvalidArgumentException implements MultiLangExcept
 
     public static function invalid(string $file, array $keys): static
     {
-        $unknownKeys = \join(', ', $keys);
+        $unknownKeys = join(', ', $keys);
         return new static('The json file "' . $file . '" contain unknown keys: ' . $unknownKeys);
     }
 }

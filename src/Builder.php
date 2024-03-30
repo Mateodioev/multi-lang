@@ -1,18 +1,19 @@
 <?php
 
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace Mateodioev\MultiLang;
 
 use Mateodioev\MultiLang\Exceptions\RequiredParamException;
 use Mateodioev\MultiLang\Parser\FileParser;
 
+use function file_put_contents;
+
 /**
  * Language builder
  */
 class Builder
 {
-
     public static function fromLanguage(Language $lang): static
     {
         $builder = new static();
@@ -61,7 +62,7 @@ class Builder
 
     public function save(string $fileName): bool
     {
-        return \file_put_contents($fileName, $this->build()->toJson()) !== false;
+        return file_put_contents($fileName, $this->build()->toJson()) !== false;
     }
 
     private function checkParams(): void

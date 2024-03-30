@@ -1,12 +1,18 @@
 <?php
 
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace Mateodioev\MultiLang\Parser;
 
-use Mateodioev\MultiLang\DataAccessor;
+use InvalidArgumentException;
 use Mateodioev\MultiLang\Exceptions\FileException;
-use Mateodioev\MultiLang\Language;
+use Mateodioev\MultiLang\{DataAccessor, Language};
+
+use function array_diff;
+use function array_keys;
+use function basename;
+use function file_get_contents;
+use function json_decode;
 
 class FileParser
 {
@@ -37,18 +43,18 @@ class FileParser
 
     public function __construct(public string $file)
     {
-        $this->rawData = \file_get_contents($file);
+        $this->rawData = file_get_contents($file);
         $this->validateFile($this->rawData);
 
-        $this->jsonData = \json_decode($this->rawData, true, flags: JSON_THROW_ON_ERROR);
+        $this->jsonData = json_decode($this->rawData, true, flags: JSON_THROW_ON_ERROR);
         $this->validateFile($this->jsonData);
 
-        $this->name = \basename($file, '.json');
+        $this->name = basename($file, '.json');
         $this->checkRequiredParameters();
     }
 
     /**
-     * @throws \InvalidArgumentException If the $content is empty
+     * @throws InvalidArgumentException If the $content is empty
      */
     private function validateFile(mixed $content): void
     {
@@ -62,8 +68,8 @@ class FileParser
      */
     private function checkRequiredParameters()
     {
-        $keys = \array_keys($this->jsonData);
-        $difference = \array_diff($keys, self::REQUIRED_PARAMETERS);
+        $keys = array_keys($this->jsonData);
+        $difference = array_diff($keys, self::REQUIRED_PARAMETERS);
 
         if (empty($difference) === false) {
             throw FileException::invalid($this->file, $difference);

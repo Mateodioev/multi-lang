@@ -1,11 +1,12 @@
 <?php
 
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace Mateodioev\MultiLang;
 
-use Mateodioev\MultiLang\Cache\Cache;
-use Mateodioev\MultiLang\Cache\NullCache;
+use Mateodioev\MultiLang\Cache\{Cache, NullCache};
+
+use RuntimeException;
 
 final class Lang
 {
@@ -65,7 +66,7 @@ final class Lang
     private static function checkParser(): void
     {
         if (self::$parser === null) {
-            throw new \RuntimeException('You must call Lang::setup() before');
+            throw new RuntimeException('You must call Lang::setup() before');
         }
     }
 }

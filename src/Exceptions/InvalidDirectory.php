@@ -1,10 +1,12 @@
 <?php
 
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace Mateodioev\MultiLang\Exceptions;
 
-final class InvalidDirectoryException extends \Exception implements MultiLangExceptionInterface
+use Exception;
+
+final class InvalidDirectoryException extends Exception implements MultiLangExceptionInterface
 {
     public static function at(string $directory): self
     {

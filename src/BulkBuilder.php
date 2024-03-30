@@ -1,8 +1,10 @@
 <?php
 
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace Mateodioev\MultiLang;
+
+use function array_map;
 
 class BulkBuilder
 {
@@ -22,7 +24,7 @@ class BulkBuilder
      */
     public function build(): array
     {
-        return \array_map(fn(Builder $builder) => $builder->build(), $this->builders);
+        return array_map(fn (Builder $builder) => $builder->build(), $this->builders);
     }
 
     public function save(string $directory): void

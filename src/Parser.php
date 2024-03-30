@@ -1,12 +1,15 @@
 <?php
 
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace Mateodioev\MultiLang;
 
-use Mateodioev\MultiLang\Exceptions\EmptyDirectoryException;
-use Mateodioev\MultiLang\Exceptions\InvalidDirectoryException;
+use InvalidArgumentException;
+use Mateodioev\MultiLang\Exceptions\{EmptyDirectoryException, InvalidDirectoryException};
 use Mateodioev\MultiLang\Parser\FileParser;
+
+use function glob;
+use function is_dir;
 
 /**
  * Load and parse files
@@ -20,21 +23,21 @@ class Parser
 
     /**
      * @param string $directory The directory containing the json files
-     * @throws \InvalidArgumentException If the directory doesn't exists
+     * @throws InvalidArgumentException If the directory doesn't exists
      */
     public function __construct(private string $directory)
     {
-        if (\is_dir($this->directory) === false) {
+        if (is_dir($this->directory) === false) {
             throw InvalidDirectoryException::at($directory);
         }
 
-        $this->files = \glob($this->directory . "/*.json");
+        $this->files = glob($this->directory . "/*.json");
         // Check if the directory is empty
         $this->validateDirectory();
     }
 
     /**
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     private function validateDirectory(): void
     {
