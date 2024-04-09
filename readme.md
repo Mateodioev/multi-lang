@@ -18,7 +18,7 @@ File `en.json`:
 ```json
 {
     "english_name": "English",
-    "name": "Spanish",
+    "name": "English",
     "data": {
         "welcome": "Welcome {full_name} to our website",
         "goodbye": "Goodbye dear {full_name}"
