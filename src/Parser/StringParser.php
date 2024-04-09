@@ -4,7 +4,7 @@ declare (strict_types=1);
 
 namespace Mateodioev\MultiLang\Parser;
 
-use Mateodioev\MultiLang\Exceptions\InvalidFormatParams;
+use Mateodioev\MultiLang\Exceptions\InvalidFormatParamsException;
 
 use function array_diff;
 use function array_keys;
@@ -44,7 +44,7 @@ class StringParser
     {
         $diff = array_diff(array_keys($params), $this->tokens());
         if (count($diff) > 0) {
-            throw InvalidFormatParams::for($diff);
+            throw InvalidFormatParamsException::for($diff);
         }
     }
 

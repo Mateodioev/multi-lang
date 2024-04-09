@@ -8,10 +8,11 @@ use Mateodioev\MultiLang\Parser\StringParser;
 
 class DataAccessor
 {
-    private ?StringParser $parser = null;
+    private StringParser $parser;
 
     public function __construct(public string $key, public string $rawData)
     {
+        $this->parser = new StringParser($rawData);
     }
 
     /**
@@ -30,7 +31,7 @@ class DataAccessor
      */
     public function format(array $params): string
     {
-        return $this->getParser()->format($params);
+        return $this->parser->format($params);
     }
 
     /**
@@ -39,16 +40,7 @@ class DataAccessor
      */
     public function tokens(): array
     {
-        return $this->getParser()->tokens();
-    }
-
-    private function getParser(): StringParser
-    {
-        if ($this->parser === null) {
-            $this->parser = new StringParser($this->rawData);
-        }
-
-        return $this->parser;
+        return $this->parser->tokens();
     }
 
     /**
