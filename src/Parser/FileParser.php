@@ -6,12 +6,12 @@ namespace Mateodioev\MultiLang\Parser;
 
 use InvalidArgumentException;
 use Mateodioev\MultiLang\Exceptions\FileException;
+use Mateodioev\MultiLang\Reader\FileReader;
 use Mateodioev\MultiLang\{DataAccessor, Language};
 
 use function array_diff;
 use function array_keys;
 use function basename;
-use function file_get_contents;
 use function json_decode;
 
 class FileParser
@@ -41,9 +41,9 @@ class FileParser
      */
     public string $name;
 
-    public function __construct(public string $file)
+    public function __construct(public string $file, FileReader $reader)
     {
-        $this->rawData = file_get_contents($file);
+        $this->rawData = $reader->read($file);
         $this->validateFile($this->rawData);
 
         $this->jsonData = json_decode($this->rawData, true, flags: JSON_THROW_ON_ERROR);

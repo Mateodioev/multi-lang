@@ -5,6 +5,7 @@ declare (strict_types=1);
 namespace Mateodioev\MultiLang;
 
 use Mateodioev\MultiLang\Cache\{Cache, NullCache};
+use Mateodioev\MultiLang\Reader\{DefaultFileReader, FileReader};
 use RuntimeException;
 
 use function array_map;
@@ -14,9 +15,18 @@ final class Lang
     private static ?Parser $parser = null;
     private static Cache $cache;
 
-    public static function setup(string $dir, Cache $cache = new NullCache()): void
-    {
-        self::$parser = new Parser($dir);
+    /**
+     * @param string $dir
+     * @param Cache $cache Where to store the languages
+     * @param FileReader $reader Use to get the content of the language files
+     * @return void
+     */
+    public static function setup(
+        string $dir,
+        Cache      $cache  = new NullCache(),
+        FileReader $reader = new DefaultFileReader()
+    ): void {
+        self::$parser = new Parser($dir, $reader);
         self::$cache = $cache;
     }
 

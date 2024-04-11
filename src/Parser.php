@@ -7,6 +7,7 @@ namespace Mateodioev\MultiLang;
 use InvalidArgumentException;
 use Mateodioev\MultiLang\Exceptions\{EmptyDirectoryException, InvalidDirectoryException};
 use Mateodioev\MultiLang\Parser\FileParser;
+use Mateodioev\MultiLang\Reader\FileReader;
 
 use function glob;
 use function is_dir;
@@ -25,7 +26,7 @@ class Parser
      * @param string $directory The directory containing the json files
      * @throws InvalidArgumentException If the directory doesn't exists
      */
-    public function __construct(private string $directory)
+    public function __construct(private string $directory, private FileReader $fileReader)
     {
         if (is_dir($this->directory) === false) {
             throw InvalidDirectoryException::at($directory);
@@ -54,7 +55,7 @@ class Parser
         $langs = [];
 
         foreach ($this->files as $file) {
-            $fileParser = new FileParser($file);
+            $fileParser = new FileParser($file, $this->fileReader);
             $langs[$fileParser->name] = $fileParser;
         }
 

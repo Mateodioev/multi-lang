@@ -29,7 +29,7 @@ class DataAccessor
      * // output: Hi, welcome to bot the bot name here
      * ```
      */
-    public function format(array $params): string
+    public function format(array $params = []): string
     {
         return $this->parser->format($params);
     }
