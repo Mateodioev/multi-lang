@@ -6,8 +6,7 @@ namespace Mateodioev\MultiLang;
 
 use Mateodioev\MultiLang\Exceptions\RequiredParamException;
 use Mateodioev\MultiLang\Parser\FileParser;
-
-use function file_put_contents;
+use Mateodioev\MultiLang\Reader\DefaultFileReader;
 
 /**
  * Language builder
@@ -28,13 +27,14 @@ class Builder
 
     public static function fromFile(string $filePath): static
     {
-        $parser = new FileParser($filePath);
+        $parser = new FileParser($filePath, new DefaultFileReader());
         return static::fromLanguage($parser->getLanguage());
     }
 
     public string $englishName = '';
     public string $name = '';
     public string $shortName = '';
+
     /**
      * @var array<string, DataAccessor>
      */

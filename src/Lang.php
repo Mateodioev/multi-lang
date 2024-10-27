@@ -5,15 +5,19 @@ declare (strict_types=1);
 namespace Mateodioev\MultiLang;
 
 use Mateodioev\MultiLang\Cache\{Cache, NullCache};
+use Mateodioev\MultiLang\Injector\{NullInjector, ValueInjector};
 use Mateodioev\MultiLang\Reader\{DefaultFileReader, FileReader};
 use RuntimeException;
-
-use function array_map;
 
 final class Lang
 {
     private static ?Parser $parser = null;
     private static Cache $cache;
+
+    /**
+     * @internal This is used to inject values in the language strings
+     */
+    public static ValueInjector $injector;
 
     /**
      * @param string $dir
@@ -23,11 +27,13 @@ final class Lang
      */
     public static function setup(
         string $dir,
-        Cache      $cache  = new NullCache(),
-        FileReader $reader = new DefaultFileReader()
+        Cache $cache = new NullCache(),
+        FileReader $reader = new DefaultFileReader(),
+        ValueInjector $injector = new NullInjector(),
     ): void {
         self::$parser = new Parser($dir, $reader);
         self::$cache = $cache;
+        self::$injector = $injector;
     }
 
     public static function get(string $shortName): ?Language

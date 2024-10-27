@@ -1,0 +1,8 @@
+{
+    "english_name": "English",
+    "name": "English",
+    "data": {
+        "title": "Las Aventuras de la Princesa y el Dragón",
+        "about": "Acerca de {title} © {author}"
+    }
+}

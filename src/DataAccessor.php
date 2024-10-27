@@ -31,6 +31,7 @@ class DataAccessor
      */
     public function format(array $params = []): string
     {
+        $params = Lang::$injector->merge($params);
         return $this->parser->format($params);
     }
 
