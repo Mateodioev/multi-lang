@@ -6,18 +6,16 @@ namespace Mateodioev\MultiLang\Exceptions;
 
 use InvalidArgumentException;
 
-use function join;
-
 class FileException extends InvalidArgumentException implements MultiLangExceptionInterface
 {
     public static function empty(string $file): static
     {
-        return new static('The json file "' . $file . '" is empty');
+        return new static("The json file \"$file\" is empty");
     }
 
     public static function invalid(string $file, array $keys): static
     {
         $unknownKeys = join(', ', $keys);
-        return new static('The json file "' . $file . '" contain unknown keys: ' . $unknownKeys);
+        return new static("The json file \"$file\" contain unknown keys: $unknownKeys");
     }
 }
