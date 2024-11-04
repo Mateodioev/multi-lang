@@ -4,13 +4,8 @@ declare (strict_types=1);
 
 namespace Mateodioev\MultiLang\Parser;
 
+use Mateodioev\MultiLang\Config;
 use Mateodioev\MultiLang\Exceptions\InvalidFormatParamsException;
-
-use function array_diff;
-use function array_keys;
-use function count;
-use function preg_match_all;
-use function preg_replace_callback;
 
 class StringParser
 {
@@ -33,7 +28,7 @@ class StringParser
 
         return preg_replace_callback('/\{(\w+)\}/', function ($matches) use ($params) {
             $key = $matches[1];
-            return isset($params[$key]) ? $params[$key] : $matches[0];
+            return $params[$key] ?? $matches[0];
         }, $this->rawData);
     }
 
@@ -43,7 +38,7 @@ class StringParser
     private function checkParams(array $params): void
     {
         $diff = array_diff(array_keys($params), $this->tokens());
-        if (count($diff) > 0) {
+        if (count($diff) > 0 && Config::instance()->strictMode) {
             throw InvalidFormatParamsException::for($diff);
         }
     }

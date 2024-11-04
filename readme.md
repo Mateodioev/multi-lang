@@ -44,9 +44,11 @@ File `es.json`:
 use Mateodioev\MultiLang\Cache\InMemoryCache;
 use Mateodioev\MultiLang\Lang;
 
+$config = \Mateodioev\MultiLang\Config::instance()
+    ->withCache(new InMemoryCache()) // Optional;
 Lang::setup(
     dir: __DIR__ . '/resources/lang',
-    cache: new InMemoryCache() // Optional
+    config: $config
 );
 ```
 

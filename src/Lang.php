@@ -4,20 +4,14 @@ declare (strict_types=1);
 
 namespace Mateodioev\MultiLang;
 
-use Mateodioev\MultiLang\Cache\{Cache, NullCache};
-use Mateodioev\MultiLang\Injector\{NullInjector, ValueInjector};
-use Mateodioev\MultiLang\Reader\{DefaultFileReader, FileReader};
+use Mateodioev\MultiLang\Cache\Cache;
+
+use Mateodioev\MultiLang\Reader\FileReader;
 use RuntimeException;
 
 final class Lang
 {
     private static ?Parser $parser = null;
-    private static Cache $cache;
-
-    /**
-     * @internal This is used to inject values in the language strings
-     */
-    public static ValueInjector $injector;
 
     /**
      * @param string $dir
@@ -27,28 +21,26 @@ final class Lang
      */
     public static function setup(
         string $dir,
-        Cache $cache = new NullCache(),
-        FileReader $reader = new DefaultFileReader(),
-        ValueInjector $injector = new NullInjector(),
+        ?Config $config,
     ): void {
-        self::$parser = new Parser($dir, $reader);
-        self::$cache = $cache;
-        self::$injector = $injector;
+        self::$parser = new Parser($dir, $config?->reader() ?? Config::instance()->reader());
     }
 
     public static function get(string $shortName): ?Language
     {
         static::checkParser();
 
-        if (self::$cache->has($shortName)) {
-            return self::$cache->get($shortName);
+        $config = Config::instance();
+
+        if ($config->cache()->has($shortName)) {
+            return $config->cache()->get($shortName);
         }
 
         $langs = self::$parser->langs();
         $language = ($langs[$shortName] ?? null)?->getLanguage();
 
         if ($language !== null) {
-            self::$cache->set($shortName, $language);
+            $config->cache()->set($shortName, $language);
         }
 
         return $language;
@@ -65,7 +57,7 @@ final class Lang
 
         $langs = array_map(function ($_lang) {
             $lang = $_lang->getLanguage();
-            self::$cache->set($lang->shortName, $lang);
+            Config::instance()->cache()->set($lang->shortName, $lang);
             return $lang;
         }, self::$parser->langs());
 
@@ -82,7 +74,7 @@ final class Lang
         $langs = [];
         foreach (self::$parser->langs() as $_lang) {
             $lang = $_lang->getLanguage();
-            self::$cache->set($lang->shortName, $lang);
+            Config::instance()->cache()->set($lang->shortName, $lang);
             $langs[] = $lang;
         }
 
